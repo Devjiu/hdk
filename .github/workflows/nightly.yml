@@ -1,7 +1,7 @@
 name: Nightly
 on:
   schedule:
-      - cron: '*/10 * * * *'
+    - cron: '*/10 * * * *'
 jobs:
   configuration:
     uses: ./.github/workflows/main.yml
