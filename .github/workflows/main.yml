@@ -5,9 +5,8 @@ on:
       reset-cache:
         type: boolean
         default: true
-  push:
-  schedule:
-    - cron: '51 2 * * *'
+  push: []
+  workflow_call:
 
 jobs:
   modin:
