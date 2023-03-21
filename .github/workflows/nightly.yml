@@ -1,7 +1,26 @@
 name: Nightly
-# on:
-#   schedule:
-#     - cron: '*/10 * * * *'
+on:
+  schedule:
+    - cron: '2 * * * *'
 jobs:
+  image-build:
+    name: Build Docker image
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Image build
+        run:  |
+          echo "image_name=hdk-cpu-nightly-$(date +'%Y%m%d')" >> $GITHUB_ENV
+          echo ${{ env.image_name }}
+          docker build -t cpu-hdk docker/
+
+      - name: Publish
+        run: |
+          docker logn -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASS }}
+          docker push devjiu/cpu-hdk:latest
+
   configuration:
+    needs: [image-build]
     uses: ./.github/workflows/main.yml
