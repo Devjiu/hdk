@@ -1,7 +1,7 @@
 name: Nightly
 on:
   schedule:
-    - cron: '2 * * * *'
+    - cron: '0 0 */1 * * *'
 jobs:
   image-build:
     name: Build Docker image
@@ -14,11 +14,13 @@ jobs:
         run:  |
           echo "image_name=hdk-cpu-nightly-$(date +'%Y%m%d')" >> $GITHUB_ENV
           echo ${{ env.image_name }}
-          docker build -t cpu-hdk docker/
+          docker build -t cpu-hdk:latest docker/
+          docker image ls
 
       - name: Publish
         run: |
-          docker logn -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASS }}
+          docker image ls -a 
+          docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASS }}
           docker push devjiu/cpu-hdk:latest
 
   configuration:
