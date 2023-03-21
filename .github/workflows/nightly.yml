@@ -27,7 +27,7 @@ jobs:
         with:
           context: .
           push: true
-          file: docker/Dockerfile
+          file: omniscidb/docker/dev/Dockerfile
           tags: devjiu/cpu-hdk:latest
 
       - name: Image check
