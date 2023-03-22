@@ -33,10 +33,14 @@ runs:
           conda activate omnisci-dev
         fi;
         if ${{ inputs.env-type  == 'docker'}}; then
+          echo "=========================container ls========================="
           docker container ls -a
+          echo "=========================prefix pwd env========================="
           ${{ inputs.prefix }} pwd && env
+          echo "=========================user pwd env========================="
           docker exec -u ghrunner verify pwd && env
-          docker exec -u ghrunner verify cmake ..
+          echo "=========================user cmake========================="
+          docker exec -u ghrunner verify mkdir build && cd build && cmake ..
         fi;
         ${{ inputs.prefix }} ls -la && mkdir build && cd build
         ${{ inputs.prefix }} ls -la && cmake ..
