@@ -45,11 +45,11 @@ runs:
           -w /home/hdk \
           devjiu/cpu-hdk:latest \
           /usr/bin/bash -c \
-          "groupadd -g ${id -g} $(whoami); useradd -m -u ${id -u} -g ${id -g} -G sudo $(whoami); chown $(whoami):$(whoami) /home/; su $(whoami) -s /usr/bin/bash"
+          "chown ghrunner:ghrunner /home/; su ghrunner -s /usr/bin/bash"
         docker image ls -a
         docker container ls -a
         docker start verify
-        echo "PRE=docker exec verify" >> $GITHUB_ENV
+        echo "PRE=docker exec -u ghrunner verify" >> $GITHUB_ENV
       shell: bash
 
     - if: ${{ inputs.env-type == 'conda' }}
