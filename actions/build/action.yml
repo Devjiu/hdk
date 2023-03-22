@@ -39,12 +39,6 @@ runs:
           docker container ls -a
           docker start verify
           docker exec verify env && pwd
-          echo "=========================container wrong?========================="
-          docker run -i --name verify_cpu_dmitriim --network host -u root -v ${PWD}:/home/hdk  devjiu/cpu-hdk:latest /usr/bin/bash -c "chown ghrunner:ghrunner /home/; su ghrunner -s /usr/bin/bash"
-          docker start verify_cpu_dmitriim
-          docker exec verify_cpu_dmitriim env && pwd
-          docker exec verify_cpu_dmitriim mkdir build && cd build
-          docker exec verify_cpu_dmitriim pwd && cmake ..
         fi;
         ${{ inputs.prefix }} ls -la && mkdir build && cd build
         ${{ inputs.prefix }} ls -la && cmake ..
