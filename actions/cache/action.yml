@@ -49,7 +49,7 @@ runs:
         docker image ls -a
         docker container ls -a
         docker start verify
-        echo "PRE=docker exec -u ghrunner -it verify /bin/bash" >> $GITHUB_ENV
+        echo "PRE=docker exec -u ghrunner -i verify /bin/bash" >> $GITHUB_ENV
       shell: bash
 
     - if: ${{ inputs.env-type == 'conda' }}
