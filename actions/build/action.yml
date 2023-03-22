@@ -38,9 +38,7 @@ runs:
           echo "=========================container ls========================="
           docker container ls -a
           docker start verify
-          docker attach verify
-          env && pwd
-          
+          docker inspect -f "{{ .Mounts }}" verify
         fi;
         ${{ inputs.prefix }} ls -la && mkdir build && cd build
         ${{ inputs.prefix }} ls -la && cmake ..
