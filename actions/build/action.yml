@@ -30,7 +30,6 @@ runs:
         echo "prefix: " ${{ inputs.prefix }}
         if ${{ inputs.env-type  == 'conda'}}; then
           which conda
-          find / -name conda.sh
           source /usr/share/miniconda/etc/profile.d/conda.sh
           conda activate omnisci-dev
         fi;
