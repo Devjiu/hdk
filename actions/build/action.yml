@@ -43,10 +43,11 @@ runs:
           docker exec verify ls -la /home/hdk
           docker inspect -f "{{ .Mounts }}" verify
         fi;
-        ${{ inputs.prefix }} mkdir build && cd build
-        ${{ inputs.prefix }} pwd && cmake ..
-        ${{ inputs.prefix }} make -j ${{ env.CPU_COUNT }}
-        ${{ inputs.prefix }} make install
-        ${{ inputs.prefix }} cd ..
-        ${{ inputs.prefix }} tar -zcf /tmp/build.tgz .
+        ${{ inputs.prefix }} \ 
+        mkdir build && cd build; \
+        pwd && cmake ..; \
+        make -j ${{ env.CPU_COUNT }}; \
+        make install; \
+        cd .. ;\
+        tar -zcf /tmp/build.tgz .
       shell: bash
