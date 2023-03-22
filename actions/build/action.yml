@@ -37,8 +37,6 @@ runs:
         if ${{ inputs.env-type  == 'docker'}}; then
           echo "=========================container ls========================="
           docker container ls -a
-          echo "=========================prefix pwd env========================="
-          ${{ inputs.prefix }} pwd && env
           docker start verify
           docker exec verify env && pwd
           echo "=========================container wrong?========================="

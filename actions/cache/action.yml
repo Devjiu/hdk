@@ -44,7 +44,7 @@ runs:
           -w /home/hdk \
           devjiu/cpu-hdk:latest \
           /usr/bin/bash -c \
-          "chown ghrunner:ghrunner /home/; echo \"SHELL=/usr/bin/bash\" > /etc/environment; su ghrunner -s /usr/bin/bash"
+          "chown ghrunner:ghrunner /home/; su ghrunner -s /usr/bin/bash"
         docker image ls -a
         docker container ls -a
         docker start verify
