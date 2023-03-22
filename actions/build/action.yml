@@ -40,7 +40,7 @@ runs:
           docker start verify
           docker exec verify env && pwd
           echo "=========================container wrong?========================="
-          docker run -i --name verify_cpu_dmitriim --network host -u root -v ${PWD}:/home/hdk    devjiu/cpu-hdk:latest /usr/bin/bash -c "groupadd -g `id -g` ghrunner; useradd -m -u `id -u` -g `id -g` -G sudo ghrunner; echo 'ghrunner ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers; chown ghrunner:ghrunner /home/; echo \"ghrunner soft nofile \`ulimit -n\`\" >> /etc/security/limits.conf; echo \"SHELL=/usr/bin/bash\" > /etc/environment ; su ghrunner -s /usr/bin/bash
+          docker run -i --name verify_cpu_dmitriim --network host -u root -v ${PWD}:/home/hdk  devjiu/cpu-hdk:latest /usr/bin/bash -c "chown ghrunner:ghrunner /home/; su ghrunner -s /usr/bin/bash"
           docker start verify_cpu_dmitriim
           docker exec verify_cpu_dmitriim env && pwd
           docker exec verify_cpu_dmitriim mkdir build && cd build
