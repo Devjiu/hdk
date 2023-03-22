@@ -39,7 +39,7 @@ runs:
           docker container ls -a
           docker start verify
           docker exec verify env && pwd
-          docker exec verify chown -R ghrunner:ghrunner /home/
+          docker exec verify chown -R $(whoami):$(whoami) /home/
           docker exec verify ls -la /home/hdk
           docker inspect -f "{{ .Mounts }}" verify
         fi;

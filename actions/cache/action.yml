@@ -37,6 +37,7 @@ runs:
     - if: ${{ inputs.env-type == 'docker' }}
       run: |
         echo ${PWD}
+        echo ${whoami}
         ls -la 
         docker run -i --name verify\
           -u root \
@@ -44,7 +45,7 @@ runs:
           -w /home/hdk \
           devjiu/cpu-hdk:latest \
           /usr/bin/bash -c \
-          "chown ghrunner:ghrunner /home/; su ghrunner -s /usr/bin/bash"
+          "groupadd -g ${id -g} $(whoami); useradd -m -u ${id -u} -g ${id -g} -G sudo $(whoami); chown $(whoami):$(whoami) /home/; su $(whoami) -s /usr/bin/bash"
         docker image ls -a
         docker container ls -a
         docker start verify
