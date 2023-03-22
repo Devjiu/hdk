@@ -32,7 +32,12 @@ runs:
           source /usr/share/miniconda/etc/profile.d/conda.sh
           conda activate omnisci-dev
         fi;
-        docker container ls -a
+        if ${{ inputs.env-type  == 'docker'}}; then
+          docker container ls -a
+          ${{ inputs.prefix }} pwd && env
+          docker exec -u ghrunner verify pwd && env
+          docker exec -u ghrunner verify cmake ..
+        fi;
         ${{ inputs.prefix }} ls -la && mkdir build && cd build
         ${{ inputs.prefix }} ls -la && cmake ..
         ${{ inputs.prefix }} make -j ${{ env.CPU_COUNT }}
