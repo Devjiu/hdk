@@ -38,8 +38,9 @@ runs:
           echo "=========================container ls========================="
           docker container ls -a
           docker start verify
-          env && pwd
           docker exec verify env && pwd
+          docker exec verify chown -R ghrunner:ghrunner /home/
+          docker exec verify ls -la /home/hdk
           docker inspect -f "{{ .Mounts }}" verify
         fi;
         ${{ inputs.prefix }} mkdir build && cd build
