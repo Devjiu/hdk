@@ -39,10 +39,12 @@ runs:
         echo ${PWD}
         ls -la 
         docker run -i --name verify\
+          -u root \
           -v ${PWD}:/home/hdk \
           -w /home/hdk \
           devjiu/cpu-hdk:latest \
-          /usr/bin/bash
+          /usr/bin/bash -c \
+          "chown $(whoami):$(whoami) /home/; echo \"SHELL=/usr/bin/bash\" > /etc/environment; su $(whoami) -s /usr/bin/bash"
         docker image ls -a
         docker container ls -a
         docker start verify
