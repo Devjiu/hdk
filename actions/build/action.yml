@@ -38,10 +38,12 @@ runs:
           echo "=========================container ls========================="
           docker container ls -a
           docker start verify
+          env && pwd
+          docker exec verify env && pwd
           docker inspect -f "{{ .Mounts }}" verify
         fi;
-        ${{ inputs.prefix }} ls -la && mkdir build && cd build
-        ${{ inputs.prefix }} ls -la && cmake ..
+        ${{ inputs.prefix }} mkdir build && cd build
+        ${{ inputs.prefix }} pwd && cmake ..
         ${{ inputs.prefix }} make -j ${{ env.CPU_COUNT }}
         ${{ inputs.prefix }} make install
         ${{ inputs.prefix }} cd ..
