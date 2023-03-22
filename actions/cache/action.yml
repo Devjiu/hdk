@@ -42,6 +42,7 @@ runs:
         docker run -i --name verify\
           -u root \
           -v ${PWD}:/home/hdk \
+          -v ~/.m2:/home/ghrunner/.m2\
           -w /home/hdk \
           devjiu/cpu-hdk:latest \
           /usr/bin/bash -c \
