@@ -1,7 +1,7 @@
 name: Nightly
-on:
-  schedule:
-    - cron: '*/10 * * * *'
+# on:
+#   schedule:
+#     - cron: '*/10 * * * *'
 jobs:
   image-build:
     name: Build Docker image
