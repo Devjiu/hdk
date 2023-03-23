@@ -55,7 +55,7 @@ runs:
         docker start verify
         docker cp ~/.m2/. verify:/home/ghrunner/.m2
         docker exec -u ghrunner -i verify chown -R ghrunner:ghrunner /home/ghrunner
-        echo "PRE=docker exec -u ghrunner -i verify /usr/bin/bash" >> $GITHUB_ENV
+        echo "PRE=docker exec -u ghrunner -i verify bash" >> $GITHUB_ENV
       shell: bash
 
     - if: ${{ inputs.env-type == 'conda' }}
@@ -64,7 +64,7 @@ runs:
         echo CONDA_ENV=${{ env.CONDA_ENV }} >>$GITHUB_ENV
         echo CONDA_PATH=$CONDA >>$GITHUB_ENV
         echo CONDA_ENV_PATH=$CONDA/envs/${{ env.CONDA_ENV }} >>$GITHUB_ENV
-        echo "PRE=/bin/bash" >> $GITHUB_ENV
+        echo "PRE=bash" >> $GITHUB_ENV
       shell: bash
 
     - if: ${{ inputs.env-type == 'conda' }}

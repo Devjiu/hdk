@@ -43,9 +43,15 @@ runs:
           docker exec verify ls -la /home/hdk
           docker inspect -f "{{ .Mounts }}" verify
         fi;
+        echo "cmake ${CMAKE_OPTS} .."
+        echo  ${{ inputs.prefix }} -c "\ 
+          mkdir build && cd build && \
+          cmake ${CMAKE_OPTS} .. && \
+          make -j ${{ env.CPU_COUNT }} && \
+          cd .. && \
+          tar -zcf /tmp/build.tgz ."
         ${{ inputs.prefix }} -c "\ 
           mkdir build && cd build && \
-          echo "cmake ${CMAKE_OPTS} .." && \
           cmake ${CMAKE_OPTS} .. && \
           make -j ${{ env.CPU_COUNT }} && \
           cd .. && \
