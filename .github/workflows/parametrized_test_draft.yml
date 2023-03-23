@@ -17,6 +17,8 @@ on:
       conda-env:
         type: string
         default: omnisci-dev
+      prefix: 
+        default: ""
 
 jobs:
   test:
@@ -49,18 +51,21 @@ jobs:
           tar -zxf build.tgz
 
       # don't works here
-      - if: ${{ inputs.env-type == 'conda' }}
-        run: |
-          source /usr/share/miniconda/etc/profile.d/conda.sh
-          conda activate omnisci-dev
+      # - if: ${{ inputs.env-type == 'conda' }}
+      #   run: |
+      #     source /usr/share/miniconda/etc/profile.d/conda.sh
+      #     conda activate omnisci-dev
       
       - name: Test
-        if: ${{ inputs.test-type == 'Integration'}}
+        if: ${{ inputs.test-type == 'Integration' &&  inputs.env-type == 'conda'}}
         uses: ./actions/Integration-test
       
       - name: Test
         if: ${{ inputs.test-type == 'Unit'}}
         uses: ./actions/Unit-test
+        with:
+          env-type: ${{ inputs.env-type }}
+          prefix: ${{ inputs.prefix }}
       
       # - name: Test
       #   if: ${{ inputs.test-type == 'Perf'}}

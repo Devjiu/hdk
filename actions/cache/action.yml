@@ -64,7 +64,7 @@ runs:
         echo CONDA_ENV=${{ env.CONDA_ENV }} >>$GITHUB_ENV
         echo CONDA_PATH=$CONDA >>$GITHUB_ENV
         echo CONDA_ENV_PATH=$CONDA/envs/${{ env.CONDA_ENV }} >>$GITHUB_ENV
-        echo "PRE=bash" >> $GITHUB_ENV
+        echo "PRE=/usr/bin/bash" >> $GITHUB_ENV
       shell: bash
 
     - if: ${{ inputs.env-type == 'conda' }}

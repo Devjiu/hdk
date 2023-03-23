@@ -1,8 +1,10 @@
 name: Test
-# inputs:
-#   env-type: 
-#     required: true
-#     default: None
+inputs:
+  prefix: 
+    default: ""
+  env-type: 
+    required: true
+    default: None
 #   hw-type:
 #     required: true
 #     default: None
@@ -32,20 +34,19 @@ runs:
     - name: Run smoke tests
       #if: inputs.test == 'smoke'
       run: |
-        sudo sh -c 'echo 2 >/proc/sys/vm/overcommit_memory'
-        whoami
-        conda info --envs
-        ./omniscidb/scripts/conda/test.sh
+        ${{ inputs.prefix }} -c ' \
+          sudo sh -c "echo 2 >/proc/sys/vm/overcommit_memory" \
+          ./omniscidb/scripts/conda/test.sh \
+        '
       shell: bash
 
     - name: Run ASAN test
       #if: inputs.test == 'asan'
       run: |
-        sudo sh -c 'echo 2 >/proc/sys/vm/overcommit_memory'
-        conda info --envs
-
-        # cd build/omniscidb/Tests # build cache
-        ./build/omniscidb/Tests/ArrowBasedExecuteTest --build-rel-alg-cache=cache.txt
-
-        # tar -zcf /tmp/cache.tgz cache.txt
+        ${{ inputs.prefix }} -c ' \
+          sudo sh -c "echo 2 >/proc/sys/vm/overcommit_memory" \ 
+          # cd build/omniscidb/Tests # build cache \
+          ./build/omniscidb/Tests/ArrowBasedExecuteTest --build-rel-alg-cache=cache.txt \
+          # tar -zcf /tmp/cache.tgz cache.txt \
+        '
       shell: bash

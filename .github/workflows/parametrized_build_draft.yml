@@ -50,4 +50,5 @@ jobs:
       test-type: ${{ matrix.test-type }}
       env-type: ${{ inputs.env-type }}
       hw-type: ${{ inputs.hw-type }}
+      prefix: ${{ env.PRE }}
       conda-env: omnisci-dev
