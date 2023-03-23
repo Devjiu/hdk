@@ -45,7 +45,6 @@ runs:
         docker run -i --name verify\
           -u root \
           -v ${PWD}:/home/hdk \
-          -v ~/.m2:/home/ghrunner/.m2 \
           -v /tmp:/tmp \
           -w /home/hdk \
           devjiu/cpu-hdk:latest \
@@ -56,7 +55,7 @@ runs:
         docker start verify
         docker cp ~/.m2/. verify:/home/ghrunner/.m2
         docker exec -u ghrunner -i verify chown -R ghrunner:ghrunner /home/ghrunner
-        echo "PRE=docker exec -u ghrunner -i verify /bin/bash" >> $GITHUB_ENV
+        echo "PRE=docker exec -u ghrunner -i verify /usr/bin/bash" >> $GITHUB_ENV
       shell: bash
 
     - if: ${{ inputs.env-type == 'conda' }}

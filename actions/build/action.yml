@@ -29,9 +29,9 @@ runs:
         ls -la 
         echo "prefix: " ${{ inputs.prefix }}
         if ${{ inputs.env-type  == 'conda'}}; then
-          which conda
           source /usr/share/miniconda/etc/profile.d/conda.sh
           conda activate omnisci-dev
+          export CMAKE_OPTS="${{ env.CMAKE_OPTS }}"
         fi;
         if ${{ inputs.env-type  == 'docker'}}; then
           echo "=========================container ls========================="
@@ -45,7 +45,7 @@ runs:
         fi;
         ${{ inputs.prefix }} -c "\ 
           mkdir build && cd build && \
-          pwd && cmake ${{ env.CMAKE_OPTS }} .. && \
+          pwd && cmake ${CMAKE_OPTS} .. && \
           make -j ${{ env.CPU_COUNT }} && \
           cd .. && \
           tar -zcf /tmp/build.tgz ."
