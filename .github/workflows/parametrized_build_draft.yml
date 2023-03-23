@@ -54,5 +54,5 @@ jobs:
       test-type: ${{ matrix.test-type }}
       env-type: ${{ inputs.env-type }}
       hw-type: ${{ inputs.hw-type }}
-      prefix: ${{needs.build-common.outputs.prefix}}
+      prefix: ${{ needs.build-common.outputs.prefix }}
       conda-env: omnisci-dev
