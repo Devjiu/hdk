@@ -10,6 +10,8 @@ on:
         required: true
         type: string
         default: None
+env:
+  PRE: "/usr/bin/bash"
 
 jobs:
   build-common:
