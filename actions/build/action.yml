@@ -45,7 +45,8 @@ runs:
         fi;
         ${{ inputs.prefix }} -c "\ 
           mkdir build && cd build && \
-          pwd && cmake ${CMAKE_OPTS} .. && \
+          echo "cmake ${CMAKE_OPTS} .." && \
+          cmake ${CMAKE_OPTS} .. && \
           make -j ${{ env.CPU_COUNT }} && \
           cd .. && \
           tar -zcf /tmp/build.tgz ."

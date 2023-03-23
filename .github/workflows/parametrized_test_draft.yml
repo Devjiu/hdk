@@ -42,7 +42,7 @@ jobs:
 
       - uses: actions/download-artifact@v3
         with:
-          name: ${{ env.RUN_STAMP }}-build
+          name: ${{ inputs.env-type }}-build-${{ github.run_id }}
 
       - name: Unpack build files
         run: |
