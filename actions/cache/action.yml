@@ -10,11 +10,14 @@ inputs:
 runs:
   using: composite
   steps:
-    # - if: ${{ inputs.env-type }} == 'docker'
-    #   uses: ./actions/docker_build
-    #   with:
-    #     hw-type: ${{ inputs.hw-type }}
-    # TBD - enable docker later.
+    - name: Restore Maven cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.m2
+        key: maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: maven-
+
     - if: ${{ inputs.env-type == 'docker' }}
       uses: actions/cache@v3
       id: docker-cache
@@ -51,6 +54,8 @@ runs:
         docker image ls -a
         docker container ls -a
         docker start verify
+        docker cp ~/.m2/. verify:/home/ghrunner/.m2
+        docker exec -u ghrunner -i verify chown -R /home/ghrunner
         echo "PRE=docker exec -u ghrunner -i verify /bin/bash" >> $GITHUB_ENV
       shell: bash
 
@@ -86,11 +91,3 @@ runs:
         conda update conda
         conda env update -f omniscidb/scripts/mapd-deps-conda-dev-env.yml
       shell: bash
-    
-    - name: Restore Maven cache
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.m2
-        key: maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: maven-
