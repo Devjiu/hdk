@@ -34,19 +34,19 @@ runs:
     - name: Run smoke tests
       #if: inputs.test == 'smoke'
       run: |
-        ${{ inputs.prefix }} -c ' \
-          sudo sh -c "echo 2 >/proc/sys/vm/overcommit_memory" \
+        ${{ inputs.prefix }} -c " \
+          sudo sh -c 'echo 2 >/proc/sys/vm/overcommit_memory' \
           ./omniscidb/scripts/conda/test.sh \
-        '
+        "
       shell: bash
 
     - name: Run ASAN test
       #if: inputs.test == 'asan'
       run: |
-        ${{ inputs.prefix }} -c ' \
-          sudo sh -c "echo 2 >/proc/sys/vm/overcommit_memory" \ 
+        ${{ inputs.prefix }} -c " \
+          sudo sh -c 'echo 2 >/proc/sys/vm/overcommit_memory' \ 
           # cd build/omniscidb/Tests # build cache \
           ./build/omniscidb/Tests/ArrowBasedExecuteTest --build-rel-alg-cache=cache.txt \
           # tar -zcf /tmp/cache.tgz cache.txt \
-        '
+        "
       shell: bash
