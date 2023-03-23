@@ -35,6 +35,7 @@ runs:
         fi;
         if ${{ inputs.env-type  == 'docker'}}; then
           echo "=========================container ls========================="
+          export CMAKE_OPTS="${{ env.CMAKE_OPTS }} -DENABLE_PYTHON=off"
           docker container ls -a
           docker start verify
           docker exec verify env && pwd
@@ -43,10 +44,9 @@ runs:
           docker inspect -f "{{ .Mounts }}" verify
         fi;
         ${{ inputs.prefix }} -c "\ 
-          mkdir build && cd build; \
-          pwd && cmake ..; \
-          make -j ${{ env.CPU_COUNT }}; \
-          make install; \
-          cd .. ;\
+          mkdir build && cd build && \
+          pwd && cmake ${{ env.CMAKE_OPTS }} .. && \
+          make -j ${{ env.CPU_COUNT }} && \
+          cd .. && \
           tar -zcf /tmp/build.tgz ."
       shell: bash
