@@ -50,12 +50,12 @@ runs:
           -w /home/hdk \
           devjiu/cpu-hdk:latest \
           /usr/bin/bash -c \
-          "chown ghrunner:ghrunner /home/; su ghrunner -s /usr/bin/bash"
+          "chown ghrunner:ghrunner /home/ && su ghrunner -s /usr/bin/bash"
         docker image ls -a
         docker container ls -a
         docker start verify
         docker cp ~/.m2/. verify:/home/ghrunner/.m2
-        docker exec -u ghrunner -i verify chown -R /home/ghrunner
+        docker exec -u ghrunner -i verify chown -R ghrunner:ghrunner /home/ghrunner
         echo "PRE=docker exec -u ghrunner -i verify /bin/bash" >> $GITHUB_ENV
       shell: bash
 
