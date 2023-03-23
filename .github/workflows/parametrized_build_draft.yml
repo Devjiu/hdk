@@ -17,6 +17,8 @@ jobs:
   build-common:
     name: Build for ${{ inputs.hw-type }} in ${{ inputs.env-type }} env
     runs-on: ubuntu-latest
+    outputs:
+      prefix: ${{ env.PRE }}
     
     env:
       CONDA_ENV: omnisci-dev
@@ -52,5 +54,5 @@ jobs:
       test-type: ${{ matrix.test-type }}
       env-type: ${{ inputs.env-type }}
       hw-type: ${{ inputs.hw-type }}
-      prefix: ${{ env.PRE }}
+      prefix: ${{needs.build-common.outputs.prefix}}
       conda-env: omnisci-dev
