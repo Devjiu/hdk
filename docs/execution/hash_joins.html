@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hash Joins &mdash; OmniSciDB  documentation</title>
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.webp"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OmniSciDB
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">System Architecture</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../overview/index.html">1. OmniSciDB at 30,000 Feet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../overview/index.html#high-level-diagram">1.1. High Level Diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../overview/index.html#data-model">1.2. Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../overview/index.html#data-flow">1.3. Data Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../overview/index.html#query-execution">1.4. Query Execution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../overview/index.html#simplified-execution-model">1.5. Simplified Execution Model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/getting_started.html">2. Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart/deps.html">2.1. Server Dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../quickstart/deps.html#prebuilt-dependencies">2.1.1. Prebuilt Dependencies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../quickstart/deps.html#environment-variables">2.1.1.1. Environment Variables</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../quickstart/deps.html#building-on-ubuntu">2.1.2. Building on Ubuntu</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../quickstart/deps.html#ubuntu-16-04">2.1.2.1. Ubuntu 16.04</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../quickstart/deps.html#ubuntu-18-04-and-20-04">2.1.2.2. Ubuntu 18.04 and 20.04</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../quickstart/deps.html#building-on-centos">2.1.3. Building on CentOS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../quickstart/deps.html#building-on-macos">2.1.4. Building on macOS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../quickstart/deps.html#building-on-arch-linux">2.1.5. Building on Arch Linux</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart/build.html">2.2. Build OmniSciDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart/start.html">2.3. Start and Load Sample Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../quickstart/start.html#starting-the-server">2.3.1. Starting the Server</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../quickstart/start.html#starting-manually">2.3.1.1. Starting Manually</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../quickstart/start.html#working-with-data">2.3.2. Working With Data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../catalog/index.html">3. Catalog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../catalog/index.html#high-level-overview">3.1. High Level Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../catalog/index.html#system-schema-syscatalog">3.2. System Schema (SysCatalog)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../catalog/index.html#users">3.2.1. Users</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../catalog/index.html#roles">3.2.2. Roles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../catalog/index.html#databases">3.2.3. Databases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../catalog/index.html#permissions">3.2.4. Permissions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../catalog/index.html#database-schema-catalog">3.3. Database Schema (Catalog)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../catalog/index.html#tables">3.3.1. Tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../catalog/index.html#columns">3.3.2. Columns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../catalog/index.html#dictionaries">3.3.3. Dictionaries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../catalog/index.html#sharded-tables">3.3.4. Sharded Tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../catalog/index.html#views">3.3.5. Views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../catalog/index.html#temporary-tables">3.3.6. Temporary Tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../catalog/index.html#dashboards">3.3.7. Dashboards</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../catalog/index.html#migration">3.4. Migration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model/index.html">4. Data Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data_model/columnar_layout.html">4.1. Columnar Data Organization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../data_model/columnar_layout.html#columns">4.1.1. Columns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_model/columnar_layout.html#fragments">4.1.2. Fragments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_model/columnar_layout.html#chunks">4.1.3. Chunks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../data_model/columnar_layout.html#example-for-chunk-physical-representations">4.1.3.1. Example for chunk physical representations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../data_model/columnar_layout.html#chunkkey">4.1.3.2. ChunkKey</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../data_model/physical_layout.html">4.2. Physical Data Layout</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../data_model/physical_layout.html#directory-structure">4.2.1. Directory Structure</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../data_model/physical_layout.html#epoch">4.2.1.1. Epoch</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../data_model/physical_layout.html#data-multipages">4.2.2. Data Multipages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../data_model/physical_layout.html#example-data-page">4.2.2.1. Example Data Page:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../data_model/physical_layout.html#metadata-pages">4.2.3. Metadata Pages</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../data_model/memory_layout.html">4.3. Memory  Layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data_model/api.html">4.4. External API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../data_model/api.html#design">4.4.1. Design</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_model/api.html#protocols">4.4.2. Protocols</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../data_model/types.html">4.5. Data Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../data_model/types.html#scalar-types">4.5.1. Scalar Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_model/types.html#scalar-types-with-encoding">4.5.2. Scalar Types with Encoding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_model/types.html#variable-length-types">4.5.3. Variable Length Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../flow/data.html">5. Data Flow</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../flow/data.html#input-data">5.1. Input Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flow/data.html#output-data">5.2. Output Data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../calcite/calcite_parser.html">6. Calcite Parser</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../calcite/calcite_parser.html#communication-between-calcite-and-omniscidb">6.1. Communication between Calcite and OmniSciDB</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">7. Query Execution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="overview.html">7.1. Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="overview.html#request-handler-dbhandler">7.1.1. Request Handler (DBHandler)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overview.html#apache-calcite">7.1.2. Apache Calcite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overview.html#relational-algebra-executor">7.1.3. Relational Algebra Executor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overview.html#relational-algebra-dag-builder-and-optimizer">7.1.4. Relational Algebra Dag Builder and Optimizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overview.html#relational-algebra-translator">7.1.5. Relational Algebra Translator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overview.html#executor">7.1.6. Executor</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="optimizer.html">7.2. DAG Builder / Optimizer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="optimizer.html#dag-builder">7.2.1. DAG Builder</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="optimizer.html#relalgnode">7.2.1.1. <code class="docutils literal notranslate"><span class="pre">RelAlgNode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="optimizer.html#rex">7.2.1.2. <code class="docutils literal notranslate"><span class="pre">Rex</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="optimizer.html#omniscidb-specific-query-optimization">7.2.2. OmniSciDB Specific Query Optimization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="optimizer.html#mark-noops">7.2.2.1. Mark Noops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="optimizer.html#eliminate-identical-copies">7.2.2.2. Eliminate Identical Copies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="optimizer.html#fold-filters">7.2.2.3. Fold Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="optimizer.html#eliminate-dead-columns">7.2.2.4. Eliminate Dead Columns</a></li>
+<li class="toctree-l4"><a class="reference internal" href="optimizer.html#separate-window-function-expressions">7.2.2.5. Separate Window Function Expressions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="optimizer.html#coalesce-nodes">7.2.2.6. Coalesce Nodes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="optimizer.html#create-left-deep-join">7.2.2.7. Create Left Deep Join</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.html">7.3. DAG Execution / Translation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html#determining-execution-order">7.3.1. Determining Execution Order</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html#raexecutiondescriptor">7.3.2. <code class="docutils literal notranslate"><span class="pre">RaExecutionDescriptor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html#query-step-translation">7.3.3. Query Step Translation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html#query-step-execution">7.3.4. Query Step Execution</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#scalar-subqueries">7.3.4.1. Scalar Subqueries</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="codegen.html">7.4. Code Generation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="codegen.html#query-templates">7.4.1. Query Templates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="codegen.html#codegenerator">7.4.2. <code class="docutils literal notranslate"><span class="pre">CodeGenerator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="codegen.html#runtime-functions-and-extension-functions">7.4.3. Runtime Functions and Extension Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="codegen.html#llvm-optimization-passes">7.4.4. LLVM Optimization Passes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="codegen.html#native-codegen">7.4.5. Native Codegen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="codegen.html#cpu-native-code-generation">7.4.5.1. CPU Native Code Generation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="codegen.html#gpu-native-code-generation">7.4.5.2. GPU Native Code Generation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="codegen.html#code-cache">7.4.5.3. Code Cache</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="codegen.html#troubleshooting">7.4.6. Troubleshooting</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="codegen.html#log-files">7.4.6.1. Log Files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="codegen.html#automatic-llvm-ir-metadata">7.4.6.2. Automatic LLVM IR Metadata</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="kernels.html">7.5. Execution Kernels</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="kernels.html#query-fragment-descriptor">7.5.1. Query Fragment Descriptor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="kernels.html#execution-modes">7.5.1.1. Execution Modes:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="kernels.html#execution-kernel">7.5.2. Execution Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kernels.html#query-execution-context">7.5.3. Query Execution Context</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="kernels.html#cpu-execution">7.5.3.1. CPU execution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="kernels.html#gpu-execution">7.5.3.2. GPU execution</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="results.html">7.6. Query Results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="results.html#result-set-storage">7.6.1. Result Set Storage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="results.html#logical-targets-and-physical-slots">7.6.1.1. Logical Targets and Physical Slots</a></li>
+<li class="toctree-l4"><a class="reference internal" href="results.html#storage-memory-layouts">7.6.1.2. Storage Memory Layouts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="results.html#group-by-queries">7.6.1.3. Group by Queries</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="results.html#reductions">7.6.2. Reductions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="results.html#accessors-and-iterators">7.6.3. Accessors and Iterators</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://doxygen.omnisci.com">Doxygen</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/omnisci/omniscidb">GitHub Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary/index.html">Glossary of Terms</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Detailed Class Information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../components/logger.html">Logger</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../components/logger.html#program-options">Program Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/logger.html#initialization-and-global-instances">Initialization and Global Instances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/logger.html#usage">Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../components/logger.html#severity">Severity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/logger.html#log-files">Log Files</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../components/logger.html#format">Format</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../components/logger.html#channel">Channel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/logger.html#macros">Macros</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../components/logger.html#log">LOG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../components/logger.html#check">CHECK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../components/logger.html#stdlog">STDLOG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../components/logger.html#debug-timer">DEBUG_TIMER</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../components/query_state.html">QueryState</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../components/query_state.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/query_state.html#example-usage">Example Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/query_state.html#summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OmniSciDB</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Hash Joins</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/execution/hash_joins.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="hash-joins">
+<h1>Hash Joins<a class="headerlink" href="#hash-joins" title="Permalink to this heading"></a></h1>
+<p>A hash join is a technique used by OmniSciDB to accelerate a SQL join query.</p>
+</section>
+<section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
+<p>A SQL join is a part of a query that combines rows from two tables. A join clause of the form <code class="docutils literal notranslate"><span class="pre">&lt;table1&gt;</span> <span class="pre">JOIN</span> <span class="pre">&lt;table2&gt;</span> <span class="pre">ON</span> <span class="pre">&lt;qualifier&gt;</span></code> can be used in place of a table name to temporarily combine the two tables for all pairs of rows where the expression (the qualifier) is true.</p>
+<section id="loop-joins">
+<h2>Loop Joins<a class="headerlink" href="#loop-joins" title="Permalink to this heading"></a></h2>
+<p>A simple way for the OmniSciDB backend to execute a join, but also a slow way, is to use two nested loops. The outer loop scans the first of the two tables in the JOIN clause, while the inner loop scans the second of the two tables, and each inner loop iteration checks the join qualifier for the two rows currently being scanned.</p>
+<p>A join can produce up to MxN combined rows where M and N are the sizes of the two tables. With a loop join, the join qualifier must be checked MxN times using this technique, and the inner table must be rescanned many times, one full scan for each row in the outer table. (Complexity is O(n^2), quadratic).</p>
+</section>
+<section id="id1">
+<h2>Hash Joins<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<p>A faster way to execute a join is to eliminate the inner loop from a loop join and replace it with a hash table lookup. Some part of the row from the outer loop is used as a key into the hash table to find a list of all of the inner table’s rows that are known to match the outer table’s row.</p>
+<p>While it takes time and memory for the hash table to be generated, this up-front investment can pay off big by avoiding the need to scan the inner table repeatedly as a loop join would have required. The inner table is only scanned once to build the hash table. (Complexity is O(n), linear).</p>
+<p>A failed hash join can sometimes automatically fall back to a loop join, such as when there isn’t enough memory for the hash table to be built.</p>
+</section>
+</section>
+<section id="hash-join-buffers">
+<h1>Hash Join Buffers<a class="headerlink" href="#hash-join-buffers" title="Permalink to this heading"></a></h1>
+<p>OmniSciDB can choose between different kinds of hash tables (described later) when executing a SQL join query, but each hash join clause will have a single buffer allocated in memory, except that multiple buffers will sometimes be coalesced into a single buffer. (Coalescing is described later.)</p>
+<p>A hash join buffer can have up to four sections which are located consecutively in memory:</p>
+<ol class="arabic simple">
+<li><p>Keys</p></li>
+<li><p>Offsets</p></li>
+<li><p>Counts</p></li>
+<li><p>Payloads</p></li>
+</ol>
+<section id="keys-section">
+<h2>Keys Section<a class="headerlink" href="#keys-section" title="Permalink to this heading"></a></h2>
+<p>The Keys section of a hash join buffer, if present, is an array containing the hashable keys from the key/value pairs to be stored in the hash table.</p>
+<p>Keys can have multiple components, depending on the kind of hash join in use.</p>
+<p>A sentinel value (typically a huge value near max int) is used to indicate an empty location in the Keys section.</p>
+</section>
+<section id="offsets-section">
+<h2>Offsets Section<a class="headerlink" href="#offsets-section" title="Permalink to this heading"></a></h2>
+<p>The Offsets section of a hash join buffer, if present, is an array containing integer indexes into the Payloads section.</p>
+<p>The Offsets section is a parallel array with the Keys section and/or with the Counts section, meaning that if there is information stored in those other sections at some location, then the matching location in the Offsets section will contain an integer offset.</p>
+<p>Empty locations in the Offsets section are filled with -1.</p>
+</section>
+<section id="counts-section">
+<h2>Counts Section<a class="headerlink" href="#counts-section" title="Permalink to this heading"></a></h2>
+<p>The Counts section of a hash join buffer, if present, is an array containing the integer sizes of the subarrays stored in the Payloads section.</p>
+<p>The Counts section is a parallel array with the Keys section and/or with the Offsets section, meaning that if there is information stored in those other sections at some location, then the matching location in the Counts section will contain an integer count.</p>
+<p>Empty locations in the Counts section are filled with zeros.</p>
+</section>
+<section id="payloads-section">
+<h2>Payloads Section<a class="headerlink" href="#payloads-section" title="Permalink to this heading"></a></h2>
+<p>The Payloads section of a hash join buffer is an array of subarrays, with each subarray containing one or more row ID integer references for rows in the one of the join tables. The Payloads section is always present in a hash join buffer in some form although it can be interleaved with the Keys section.</p>
+<p>The location of each Payloads subarray is stored in the Offsets section. The length of each Payloads subarray is stored in the Counts section.</p>
+</section>
+</section>
+<section id="kinds-of-hash-joins">
+<h1>Kinds of Hash Joins<a class="headerlink" href="#kinds-of-hash-joins" title="Permalink to this heading"></a></h1>
+<p>An OmniSciDB hash join buffer can have either a one-to-one layout or a one-to-many layout.</p>
+<p>A one-to-one layout is the least-complicated and fastest kind of hash join buffer. The Offsets and Counts sections are not required for a one-to-one layout because there is always exactly one payload row ID stored per key.</p>
+<p>A one-to-many hash join buffer will have at least the Offsets, Counts, and Payloads sections. Offsets and Counts are both required to define the subarrays present in a one-to-many Payloads section.</p>
+<p>In some cases the Keys section can be omitted from the hash join buffer giving perfect hashing, where integer keys are directly mapped to locations in the other sections.</p>
+<p>OmniSciDB automatically selects from one of three C++ classes when building a hash join buffer:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>C++ Class Name</p></th>
+<th class="head"><p>Layouts</p></th>
+<th class="head"><p>Selected For</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>JoinHashTable</p></td>
+<td><p>One-To-One or One-To-Many</p></td>
+<td><p>Perfect hashing</p></td>
+</tr>
+<tr class="row-odd"><td><p>BaselineJoinHashTable</p></td>
+<td><p>One-To-One or One-To-Many</p></td>
+<td><p>Keyed hashing</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="inspecting-a-hash-join-buffer">
+<h1>Inspecting a Hash Join Buffer<a class="headerlink" href="#inspecting-a-hash-join-buffer" title="Permalink to this heading"></a></h1>
+<p>For learning about and/or for debugging a hash join buffer, OmniSciDB provides a toString() function for decoding the buffer into a human-readable string.</p>
+<p>Be aware that a hash join buffer often may be built using multiple threads, possibly causing the exact layout of a buffer to vary for the same SQL across different builds. (See later section about comparing buffers for more info.)</p>
+<section id="one-to-one-joinhashtable-example">
+<h2>One-To-One JoinHashTable Example<a class="headerlink" href="#one-to-one-joinhashtable-example" title="Permalink to this heading"></a></h2>
+<p>This SQL causes OmniSciDB to use one-to-one perfect hashing shown by the very simple hash join buffer containing only a small Payloads section. The second table is selected for hashing because it has the lowest cardinality and because it has no duplicate records.</p>
+<blockquote>
+<div><dl>
+<dt>SQL:</dt><dd><p>create table table1 (a integer);
+create table table2 (b integer);</p>
+<p>insert into table1 values (1);
+insert into table1 values (1);
+insert into table1 values (2);
+insert into table1 values (3);
+insert into table1 values (4);</p>
+<p>insert into table2 values (0);
+insert into table2 values (1);
+insert into table2 values (3);</p>
+<p>select * from table1 join table2 on a = b;</p>
+</dd>
+<dt>C++ toString():</dt><dd><div class="line-block">
+<div class="line">payloads 0 1 * 2 |</div>
+</div>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="one-to-many-joinhashtable-example">
+<h2>One-To-Many JoinHashTable Example<a class="headerlink" href="#one-to-many-joinhashtable-example" title="Permalink to this heading"></a></h2>
+<p>This SQL is nearly identical to the previous example, except that a duplicate record has been added to the second table, causing one-to-many perfect hashing to be selected instead of one-to-one perfect hashing. The one-to-many hashing requires Offsets and Counts sections to be built into the hash join buffer in addition to the Payloads section, and the Offsets section acts as the hash table instead of the Payloads section.</p>
+<blockquote>
+<div><dl>
+<dt>SQL:</dt><dd><p>create table table1 (a integer);
+create table table2 (b integer);</p>
+<p>insert into table1 values (1);
+insert into table1 values (1);
+insert into table1 values (2);
+insert into table1 values (3);
+insert into table1 values (4);</p>
+<p>insert into table2 values (0);
+insert into table2 values (1);
+insert into table2 values (3);
+insert into table2 values (3);</p>
+<p>select * from table1 join table2 on a = b;</p>
+</dd>
+<dt>C++ toString():</dt><dd><div class="line-block">
+<div class="line">offsets 0 1 * 2 | counts 1 1 * 2 | payloads 0 1 2 3 |</div>
+</div>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="one-to-one-baselinejoinhashtable-example">
+<h2>One-To-One BaselineJoinHashTable Example<a class="headerlink" href="#one-to-one-baselinejoinhashtable-example" title="Permalink to this heading"></a></h2>
+<p>Adding a second column to one of the tables, then including that column in the join qualifier (the <code class="docutils literal notranslate"><span class="pre">ON</span></code> expression) prevents perfect hashing from being used and requires a Keys section to be built into the hash buffer. As an optimization that is possible with one-to-one hashing, the payloads are interleaved into the keys as if each payload row ID was an additional key component.</p>
+<blockquote>
+<div><dl>
+<dt>SQL:</dt><dd><p>create table table1 (a1 integer, a2 integer);
+create table table2 (b integer);</p>
+<p>insert into table1 values (1, 11);
+insert into table1 values (2, 12);
+insert into table1 values (3, 13);
+insert into table1 values (4, 14);</p>
+<p>insert into table2 values (0);
+insert into table2 values (1);
+insert into table2 values (3);</p>
+<p>select * from table1 join table2 on a1 = b and a2-10 = b;</p>
+</dd>
+<dt>C++ toString():</dt><dd><div class="line-block">
+<div class="line">keys * (1,1,1) (3,3,2) (0,0,0) * * |</div>
+</div>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="one-to-many-baselinejoinhashtable-example">
+<h2>One-To-Many BaselineJoinHashTable Example<a class="headerlink" href="#one-to-many-baselinejoinhashtable-example" title="Permalink to this heading"></a></h2>
+<p>Adding a duplicate record to the previous example turns the hash join into a one-to-many lookup, requiring all four buffer sections to be built.</p>
+<blockquote>
+<div><dl>
+<dt>SQL:</dt><dd><p>create table table1 (a1 integer, a2 integer);
+create table table2 (b integer);</p>
+<p>insert into table1 values (1, 11);
+insert into table1 values (2, 12);
+insert into table1 values (3, 13);
+insert into table1 values (4, 14);</p>
+<p>insert into table2 values (0);
+insert into table2 values (1);
+insert into table2 values (3);
+insert into table2 values (3);</p>
+<p>select * from table1 join table2 on a1 = b and a2-10 = b;</p>
+</dd>
+<dt>C++ toString():</dt><dd><div class="line-block">
+<div class="line">keys * (1,1) (3,3) (0,0) * * | offsets * 0 1 3 * * | counts * 1 2 1 * * | payloads 1 2 3 0 |</div>
+</div>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</section>
+<section id="comparing-hash-join-buffers">
+<h1>Comparing Hash Join Buffers<a class="headerlink" href="#comparing-hash-join-buffers" title="Permalink to this heading"></a></h1>
+<p>To help support unit testing, a hash join buffer can be decoded into a std::set by using the toSet() member function. Two of these sets can be compared for equality to determine if the hash join buffers are logically equal, even when the exact layouts of the buffers may differ in memory, such as when trivial layout differences occur due to multiple threads being used to build a single hash join buffer.</p>
+</section>
+<section id="equijoins-vs-non-equijoins">
+<h1>Equijoins vs Non-Equijoins<a class="headerlink" href="#equijoins-vs-non-equijoins" title="Permalink to this heading"></a></h1>
+<p>TODO</p>
+</section>
+<section id="coalescing">
+<h1>Coalescing<a class="headerlink" href="#coalescing" title="Permalink to this heading"></a></h1>
+<p>TODO</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, OmniSci, Inc.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
